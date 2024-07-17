@@ -15,7 +15,7 @@ const ContactList = () => {
   const filterItems = getfilterItems(items, filterName);
 
   return (
-    <ul className={css.list}>
+    <ul className={css.contactsList}>
       {filterItems.map((value) => {
         return (
           <li key={value.id} className={css.item}>
