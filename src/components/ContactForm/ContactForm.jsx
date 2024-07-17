@@ -1,14 +1,10 @@
 import { Field, Formik, Form, ErrorMessage } from "formik";
 import { nanoid } from "nanoid";
-import { useId } from "react";
 import * as yup from "yup";
 import css from "./ContactForm.module.css";
 
-const initialValues = {
-  id: nanoid(),
-  name: "",
-  number: "",
-};
+import { addContact } from "../../redux/contactsSlice";
+import { useDispatch } from "react-redux";
 
 const validationSchema = yup.object().shape({
   name: yup
@@ -25,36 +21,35 @@ const validationSchema = yup.object().shape({
     .max(12, "Number cannot exceed 12 characters"),
 });
 
-export const ContactForm = ({ onAdd }) => {
-  const nameFieldId = useId();
-  const numberFieldId = useId();
+const ContactForm = () => {
+  const nameFieldId = nanoid();
+  const numberFieldId = nanoid();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (values, { resetForm }) => {
-    onAdd({
-      id: nanoid(),
-      name: values.name,
-      number: values.number,
-    });
-    resetForm();
+  const handleSubmit = (values, action) => {
+    action.resetForm();
+    dispatch(
+      addContact({
+        id: nameFieldId,
+        name: values.name,
+        number: values.number,
+      })
+    );
   };
-
   return (
     <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
+      initialValues={{
+        name: "",
+        number: "",
+      }}
       onSubmit={handleSubmit}
+      validationSchema={validationSchema}
     >
       <Form className={css.form}>
         <label htmlFor={nameFieldId} className={css.label}>
           Name
         </label>
-        <Field
-          type="text"
-          id={nameFieldId}
-          name="name"
-          className={css.input}
-          placeholder="Enter name..."
-        />
+        <Field type="text" name="name" id={nameFieldId} className={css.input} />
         <ErrorMessage className={css.error} name="name" component="span" />
 
         <label htmlFor={numberFieldId} className={css.label}>
@@ -62,10 +57,9 @@ export const ContactForm = ({ onAdd }) => {
         </label>
         <Field
           type="text"
-          className={css.input}
-          id={numberFieldId}
           name="number"
-          placeholder="Enter phone number..."
+          id={numberFieldId}
+          className={css.input}
         />
         <ErrorMessage className={css.error} name="number" component="span" />
 
