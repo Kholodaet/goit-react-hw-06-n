@@ -15,15 +15,21 @@ const ContactList = () => {
   const filterItems = getfilterItems(items, filterName);
 
   return (
-    <ul className={css.contactsList}>
-      {filterItems.map((value) => {
-        return (
-          <li key={value.id} className={css.item}>
-            <Contact value={value} />
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <div className={css.listParams}>
+        <h2>Check contacts list</h2>
+        <p>Length: {filterItems.length}</p>
+      </div>
+      <ul className={css.contactsList}>
+        {filterItems.map((value) => {
+          return (
+            <li key={value.id} className={css.item}>
+              <Contact value={value} />
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
 
